@@ -384,6 +384,17 @@ public class Window {
 				int a = slider1.getValue();
 				int b = slider2.getValue();
 				int y = a*b;
+				if(!slider1.getValueIsAdjusting()){
+					switch(y){
+						case 1:
+							lbl1.setBackground(Color.magenta);
+						case 64:
+							lbl64.setBackground(Color.magenta);
+							break;
+						default:
+							break;
+					}
+				}
 			}
 		});
 		
