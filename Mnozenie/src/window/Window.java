@@ -45,7 +45,7 @@ public class Window {
 	protected int slider1Value;
 	protected int slider2Value;
 	String player1Name = "Gracz 1", player2Name = "Gracz 2";
-	protected Player turn = Player.PLAYER1;			//na razie z zalozenia zawsze zaczyna player1
+	protected Owner turn = Owner.PLAYER1;			//na razie z zalozenia zawsze zaczyna player1
 	boolean firstMove = true;						//pierwszy ruch nie wprowadza zmian na planszy
 	boolean kom = true;
 	
@@ -77,8 +77,8 @@ public class Window {
 						return;
 					}
 					plansza.setInUse(a, turn);
-					if(turn==Player.PLAYER1)	turn = Player.PLAYER2;
-					else turn = Player.PLAYER1;
+					if(turn==Owner.PLAYER1)	turn = Owner.PLAYER2;
+					else turn = Owner.PLAYER1;
 				}
 			}
 		}
@@ -182,6 +182,7 @@ class Slide extends JPanel{
 	private JLabel label_6;
 	private JLabel label_7;
 	private JLabel label_8;
+	
 	public Slide(){
 		super();
 		setBounds(155, 436, 450, 50);
