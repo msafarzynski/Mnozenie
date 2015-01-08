@@ -38,14 +38,14 @@ import javax.swing.border.BevelBorder;
 public class Window {
 
 	private JFrame frame;
+	private JPanel panel;
 	private Slider slider1;
 	private Slider slider2;
 	private Plansza plansza;
 	private Slide slide;
-	protected int slider1Value;
-	protected int slider2Value;
+	protected Ewaluacja ewaluacja;
 	String player1Name = "Gracz 1", player2Name = "Gracz 2";
-	protected Owner turn = Owner.PLAYER1;			//na razie z zalozenia zawsze zaczyna player1
+	//protected Owner turn = Owner.PLAYER1;			//na razie z zalozenia zawsze zaczyna player1
 	boolean firstMove = true;						//pierwszy ruch nie wprowadza zmian na planszy
 	boolean kom = true;
 	
@@ -60,25 +60,37 @@ public class Window {
 				if(kom){
 					if(plansza.isInUse(a)){							//jezeli kafelek juz jest przez kogos zajety to pojawia sie komunikat i 
 							JOptionPane.showMessageDialog(frame,	//slidery wracaja do poprzedniego stanu
-									"Niepoprawny ruch", "Blad",	//tura nie jest zmieniana - ten sam gracz znow wybiera numer
+									"Niepoprawny ruch", "Blad",		//tura nie jest zmieniana - ten sam gracz znow wybiera numer
 									JOptionPane.PLAIN_MESSAGE);
 						kom = false;
 						if(e.getSource() == slider1)
-							slider1.setValue(slider1Value);
+							slider1.setValue(ewaluacja.getSlider1Value());
 						else
-							slider2.setValue(slider2Value);
+							slider2.setValue(ewaluacja.getSlider2Value());
 						kom = true;
 						return;
 					}
-					slider1Value = s1;
-					slider2Value = s2;
+					ewaluacja.setSlider1Value(s1);
+					ewaluacja.setSlider2Value(s2);
 					if(firstMove){
 						firstMove = false;
 						return;
 					}
-					plansza.setInUse(a, turn);
-					if(turn==Owner.PLAYER1)	turn = Owner.PLAYER2;
-					else turn = Owner.PLAYER1;
+					plansza.setInUse(a, ewaluacja.getTurn());
+					ewaluacja.setOwner(a, ewaluacja.getTurn());
+					if(ewaluacja.isWinner(a, ewaluacja.getTurn())){
+						if(ewaluacja.getTurn()==Owner.PLAYER1)
+							JOptionPane.showMessageDialog(frame,
+									"Wygrywa "+player1Name, "Wygrana",
+									JOptionPane.PLAIN_MESSAGE);
+						else
+							JOptionPane.showMessageDialog(frame,
+									"Wygrywa "+player2Name, "Wygrana",
+									JOptionPane.PLAIN_MESSAGE);
+					}
+					if(ewaluacja.getTurn()==Owner.PLAYER1)	ewaluacja.setTurn(Owner.PLAYER2);
+					else ewaluacja.setTurn(Owner.PLAYER1);
+					//ewaluacja.showBoard();
 				}
 			}
 		}
@@ -106,7 +118,18 @@ public class Window {
 	 * Create the application.
 	 */
 	public Window() {
+		
 		initialize();
+		
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		
+		panel.add(plansza);	
+		
+		panel.add(slider1);
+				
+		panel.add(slider2);
+			
+		panel.add(slide);
 	}
 
 	/**
@@ -118,36 +141,30 @@ public class Window {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 780, 579);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
-		//panel.setBackground(Color.BLACK);
+		
+		panel = new JPanel();
 		panel.setLayout(null);
 		
 		plansza = new Plansza();
 		plansza.setLocation(230, 100);
-		panel.add(plansza);
 		
 		slider1 = new Slider();
 		slider1.setBounds(215, 405, 330, 35);
-		panel.add(slider1);
-		
 		
 		slider2 = new Slider();
 		slider2.setBounds(215, 485, 330, 35);
-		panel.add(slider2);
 		
 		slide = new Slide();
 		slide.setLocation(200, 436);
 		slide.setSize(360, 40);
-		panel.add(slide);
 		
+		ewaluacja = new Ewaluacja();
 		
-		//turn = Player.PLAYER1;
-		//firstMove = true;
+		//TODO: kto zaczyna gre - chcemy miec wybor do testow
+		ewaluacja.setTurn(Owner.PLAYER1);
 		
-		slider1Value = slider1.getValue();
-		slider2Value = slider2.getValue();
+		ewaluacja.setSlider1Value(slider1.getValue());
+		ewaluacja.setSlider2Value(slider2.getValue());
 		
 		//turn = Player.PLAYER1;
 		//firstMove = true
