@@ -90,7 +90,7 @@ public class Window {
 					}
 					if(ewaluacja.getTurn()==Owner.PLAYER1)	ewaluacja.setTurn(Owner.PLAYER2);
 					else ewaluacja.setTurn(Owner.PLAYER1);
-					//ewaluacja.showBoard();
+					ewaluacja.showBoard();
 				}
 			}
 		}
