@@ -27,11 +27,12 @@ public class Plansza extends JPanel{
 	 * Tworzenie i dodawanie do tablicy i planszy nowych kafli
 	 */
 	void dodajKafle(){
+		for(int y=0; y<6; y++)
 		for(int x=0; x<6; x++)
-			for(int y=0; y<6; y++){
+			{
 				int a = Functions.numerKafla(x, y);
-				kafelki[y][x] = new Kafelek(Integer.toString(a));
-				add(kafelki[y][x]);
+				kafelki[x][y] = new Kafelek(Integer.toString(a));
+				add(kafelki[x][y]);
 			}
 	}
 	

@@ -44,6 +44,8 @@ public class Window {
 	private Plansza plansza;
 	private Slide slide;
 	protected Ewaluacja ewaluacja;
+	private Minmax minmax = new Minmax();
+	private State state;
 	String player1Name = "Gracz 1", player2Name = "Gracz 2";
 	//protected Owner turn = Owner.PLAYER1;			//na razie z zalozenia zawsze zaczyna player1
 	boolean firstMove = true;						//pierwszy ruch nie wprowadza zmian na planszy
@@ -91,6 +93,9 @@ public class Window {
 					if(ewaluacja.getTurn()==Owner.PLAYER1)	ewaluacja.setTurn(Owner.PLAYER2);
 					else ewaluacja.setTurn(Owner.PLAYER1);
 					ewaluacja.showBoard();
+					state = new State(s1,s2,ewaluacja.getBoard(), ewaluacja.getTurn());
+					minmax.minMaxStep(state, 1).showBoard();
+					
 				}
 			}
 		}

@@ -99,9 +99,9 @@ public abstract class Functions {
 	 * @return		numer na kaflu
 	 */
 	public static int numerKafla(int x, int y){
-		switch(x){
+		switch(y){
 		case 0:
-			switch(y){
+			switch(x){
 			case 0:
 				return 1;
 			case 1:
@@ -116,7 +116,7 @@ public abstract class Functions {
 				return 6;
 			}
 		case 1:
-			switch(y){
+			switch(x){
 			case 0:
 				return 7;
 			case 1:
@@ -131,7 +131,7 @@ public abstract class Functions {
 				return 14;
 			}
 		case 2:
-			switch(y){
+			switch(x){
 			case 0:
 				return 15;
 			case 1:
@@ -146,7 +146,7 @@ public abstract class Functions {
 				return 24;
 			}
 		case 3:
-			switch(y){
+			switch(x){
 			case 0:
 				return 25;
 			case 1:
@@ -161,7 +161,7 @@ public abstract class Functions {
 				return 35;
 			}
 		case 4:
-			switch(y){
+			switch(x){
 			case 0:
 				return 36;
 			case 1:
@@ -176,7 +176,7 @@ public abstract class Functions {
 				return 49;
 			}
 		case 5:
-			switch(y){
+			switch(x){
 			case 0:
 				return 54;
 			case 1:
