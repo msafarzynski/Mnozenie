@@ -82,6 +82,7 @@ public class State {
 			}
 			System.out.println();
 		}
+		System.out.println(Ewaluacja.evaluate(plansza));
 		System.out.println("----------------------------");
 	}
 	
@@ -135,7 +136,7 @@ public class State {
 		}
 		
 		System.out.println("==============================================================================================================");
-		//for(State s: childStates)s.showBoard();
+		for(State s: childStates)s.showBoard();
 		return childStates;
 
 	}

@@ -1,5 +1,7 @@
 package window;
 
+import java.util.ArrayList;
+
 public class Minmax {
 
 	
@@ -8,10 +10,10 @@ public class Minmax {
 		
 		int max = 0;
 		int result = 0;
-		State maxChild =state
-				;
+		ArrayList<State> children = state.generateChildStates();
+		State maxChild =children.get(0);
 		
-		for(State s: state.generateChildStates())
+		for(State s: children)
 		if( ( result= minMax(s, depth-1))>max)
 		{
 			maxChild = s;
