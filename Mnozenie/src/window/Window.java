@@ -94,7 +94,7 @@ public class Window {
 					else ewaluacja.setTurn(Owner.PLAYER1);
 					ewaluacja.showBoard();
 					state = new State(s1,s2,ewaluacja.getBoard(), ewaluacja.getTurn());
-					minmax.minMaxStep(state, 1).showBoard();
+					minmax.minMaxStep(state, 2).showBoard();
 					
 				}
 			}

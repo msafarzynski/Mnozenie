@@ -155,7 +155,7 @@ public class Ewaluacja {
 	
 	
 	
-	static int evaluateDown(Owner[][]board)
+	static int evaluateDown(Owner[][]board, Owner player)
 	{
 		int tripleLinesCounter = 0;
 		int doubleLinesCounter = 0;
@@ -169,7 +169,7 @@ public class Ewaluacja {
 
 	boolean [][] checkedDown = new boolean[6][6];
 	
-	Owner content = Owner.PLAYER1;
+	Owner content = player;
 	
 	for(column = 0;column<6;column++)
 		{
@@ -232,7 +232,7 @@ public class Ewaluacja {
 	
 	}
 	
-	static int evaluateRight(Owner[][]board)
+	static int evaluateRight(Owner[][]board, Owner player)
 	{
 		int tripleLinesCounter = 0;
 		int doubleLinesCounter = 0;
@@ -246,7 +246,7 @@ public class Ewaluacja {
 	
 	boolean [][] checkedRight = new boolean[6][6];
 	
-	Owner content = Owner.PLAYER1;
+	Owner content = player;
 	
 	for(row = 0;row<6;row++)for(column = 0;column<6;column++)
 		{
@@ -307,7 +307,7 @@ public class Ewaluacja {
 	return 1000*tripleLinesCounter+100*doubleLinesCounter+singleElementCounter;
 	
 	}
-	static int evaluateDiagonalUp(Owner[][]board)
+	static int evaluateDiagonalUp(Owner[][]board, Owner player)
 	{
 		int tripleLinesCounter = 0;
 		int doubleLinesCounter = 0;
@@ -321,7 +321,7 @@ public class Ewaluacja {
 	
 	boolean [][] checkedDiagonal = new boolean[6][6];
 	
-	Owner content = Owner.PLAYER1;
+	Owner content = player;
 	
 	for(int determinant = 0; determinant<6;determinant++)
 	{for(row = determinant, column = 0;row>=0&&column <=determinant;row--, column++)
@@ -441,7 +441,7 @@ public class Ewaluacja {
 	}
 	
 	
-	static int evaluateDiagonalDown(Owner[][]board)
+	static int evaluateDiagonalDown(Owner[][]board, Owner player)
 	{
 		int tripleLinesCounter = 0;
 		int doubleLinesCounter = 0;
@@ -455,7 +455,7 @@ public class Ewaluacja {
 	
 	boolean [][] checkedDiagonal = new boolean[6][6];
 	
-	Owner content = Owner.PLAYER1;
+	Owner content = player;
 	
 	for(int determinant = 5; determinant>0;determinant--)
 	{for(row = 0, column = determinant;row<=5-determinant&&column<5;row++, column++)
@@ -579,6 +579,7 @@ public class Ewaluacja {
 
 	static int evaluate(Owner[][] board)
 	{
-		return evaluateRight(board)+evaluateDown(board)+evaluateDiagonalUp(board)+evaluateDiagonalDown(board);
+		return evaluateRight(board, Owner.PLAYER1)+evaluateDown(board, Owner.PLAYER1)+evaluateDiagonalUp(board, Owner.PLAYER1)+evaluateDiagonalDown(board, Owner.PLAYER1)-
+				(evaluateRight(board, Owner.PLAYER2)+evaluateDown(board, Owner.PLAYER2)+evaluateDiagonalUp(board, Owner.PLAYER2)+evaluateDiagonalDown(board, Owner.PLAYER2));
 	}
 }
