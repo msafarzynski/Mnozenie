@@ -125,7 +125,7 @@ public class Ewaluacja {
 		right_down = true;
 		x = p.x;
 		y = p.y+1;
-		while(isGroup && count!=4){		//w prawo i lewo
+		while(isGroup && count!=4){		//w gore i dol
 			if(y>5){
 				right_down = false;
 				y = p.y-1;
@@ -150,6 +150,81 @@ public class Ewaluacja {
 		}
 		if(count == 4)
 			return true;
+		
+		isGroup = true;
+		count = 1;
+		right_down = true;
+		x = p.x+1;
+		y = p.y+1;
+		while(isGroup && count!=4){		//na ukos prawo dol i lewo gora
+			if(y>5 || x>5){
+				right_down = false;
+				y = p.y-1;
+				x = p.x-1;
+			}
+			if(y<0 || x<0)
+				break;
+			if(plansza[x][y] == player){
+				if(right_down){
+					y++;
+					x++;
+				}
+				else{
+					y--;
+					x--;
+				}
+				count++;
+				
+			}
+			else
+				if(right_down){
+					right_down = false;
+					y = p.y-1;
+					x = p.x-1;
+				}
+				else
+					isGroup = false;
+		}
+		if(count == 4)
+			return true;
+		
+		isGroup = true;
+		count = 1;
+		right_down = true;
+		x = p.x-1;
+		y = p.y+1;
+		while(isGroup && count!=4){		//na ukos lewo dol i prawo gora
+			if(y>5 || x<0){
+				right_down = false;
+				y = p.y-1;
+				x = p.x+1;
+			}
+			if(y<0 || x>5)
+				break;
+			if(plansza[x][y] == player){
+				if(right_down){
+					y++;
+					x--;
+				}
+				else{
+					y--;
+					x++;
+				}
+				count++;
+				
+			}
+			else
+				if(right_down){
+					right_down = false;
+					y = p.y-1;
+					x = p.x+1;
+				}
+				else
+					isGroup = false;
+		}
+		if(count == 4)
+			return true;
+		
 		return false;
 	}
 	
