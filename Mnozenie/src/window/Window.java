@@ -34,6 +34,7 @@ import java.awt.Cursor;
 import java.awt.ComponentOrientation;
 
 import javax.swing.border.BevelBorder;
+import javax.swing.JTextArea;
 
 public class Window {
 
@@ -46,10 +47,13 @@ public class Window {
 	protected Ewaluacja ewaluacja;
 	private Minmax minmax = new Minmax();
 	private State state;
-	String player1Name = "Gracz 1", player2Name = "Gracz 2";
+	String player1Name = "Gracz";
+	String player2Name = "Komputer";
 	//protected Owner turn = Owner.PLAYER1;			//na razie z zalozenia zawsze zaczyna player1
 	boolean firstMove = true;						//pierwszy ruch nie wprowadza zmian na planszy
 	boolean kom = true;
+	int mode;						//mode=0 tryb gracz vs bot, mode=1 tryb bot vs bot
+	private JTextArea textArea;
 	
 	class SliderListener implements ChangeListener{
 		int s1, s2;
@@ -76,10 +80,12 @@ public class Window {
 					ewaluacja.setSlider2Value(s2);
 					if(firstMove){
 						firstMove = false;
+						ewaluacja.setTurn(Owner.PLAYER1);
 						return;
 					}
 					plansza.setInUse(a, ewaluacja.getTurn());
 					ewaluacja.setOwner(a, ewaluacja.getTurn());
+					textArea.setText(textArea.getText()+"\n"+(ewaluacja.getTurn()==Owner.PLAYER1 ? player1Name : player2Name)+": "+a);
 					if(ewaluacja.isWinner(a, ewaluacja.getTurn())){
 						if(ewaluacja.getTurn()==Owner.PLAYER1)
 							JOptionPane.showMessageDialog(frame,
@@ -93,8 +99,20 @@ public class Window {
 					if(ewaluacja.getTurn()==Owner.PLAYER1)	ewaluacja.setTurn(Owner.PLAYER2);
 					else ewaluacja.setTurn(Owner.PLAYER1);
 					ewaluacja.showBoard();
-					state = new State(s1,s2,ewaluacja.getBoard(), ewaluacja.getTurn());
-					minmax.minMaxStep(state, 2).showBoard();
+					if(ewaluacja.getTurn()==Owner.PLAYER2 && mode==0){			//jezeli teraz jest tura bota
+						state = new State(s1,s2,ewaluacja.getBoard(), ewaluacja.getTurn());
+						State nextState = minmax.minMaxStep(state, 2);
+						nextState.showBoard();
+						if(s1!=nextState.slider1Value){
+							slider1.setValue(nextState.slider1Value);
+					//		ewaluacja.setSlider2Value(nextState.slider2Value);
+						}
+						if(s2!=nextState.slider2Value){
+							slider2.setValue(nextState.slider2Value);
+					//		ewaluacja.setSlider1Value(nextState.slider1Value);
+						}
+					}
+					
 					
 				}
 			}
@@ -135,6 +153,29 @@ public class Window {
 		panel.add(slider2);
 			
 		panel.add(slide);
+		
+		JLabel lblPlayer1 = new JLabel(player1Name);
+		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPlayer1.setForeground(Color.BLACK);
+		lblPlayer1.setOpaque(true);
+		lblPlayer1.setBackground(Color.MAGENTA);
+		lblPlayer1.setBounds(41, 151, 150, 50);
+		panel.add(lblPlayer1);
+		
+		JLabel lblPlayer2 = new JLabel(player2Name);
+		lblPlayer2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPlayer2.setForeground(Color.BLACK);
+		lblPlayer2.setOpaque(true);
+		lblPlayer2.setBackground(Color.ORANGE);
+		lblPlayer2.setBounds(41, 251, 150, 50);
+		panel.add(lblPlayer2);
+		
+		textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setLineWrap(true);
+		textArea.setBackground(Color.LIGHT_GRAY);
+		textArea.setBounds(569, 100, 175, 300);
+		panel.add(textArea);
 	}
 
 	/**
@@ -166,7 +207,7 @@ public class Window {
 		ewaluacja = new Ewaluacja();
 		
 		//TODO: kto zaczyna gre - chcemy miec wybor do testow
-		ewaluacja.setTurn(Owner.PLAYER1);
+		ewaluacja.setTurn(Owner.PLAYER2);
 		
 		ewaluacja.setSlider1Value(slider1.getValue());
 		ewaluacja.setSlider2Value(slider2.getValue());
@@ -177,8 +218,23 @@ public class Window {
 		slider1.addChangeListener(new SliderListener());
 		slider2.addChangeListener(new SliderListener());
 		
-		player1Name = JOptionPane.showInputDialog(frame, "Wpisz nazwe gracza 1", "Gracz 1");
-		player2Name = JOptionPane.showInputDialog(frame, "Wpisz nazwe gracza 2", "Gracz 2");
+		String[] options = {"Gracz vs bot", "Bot vs bot"};
+		mode = JOptionPane.showOptionDialog(frame, "Wybierz tryb gry", "Wybierz tryb", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options);
+		if(mode==0)
+			player1Name = JOptionPane.showInputDialog(frame, "Wpisz nazwe gracza", "Gracz");
+		JOptionPane.showMessageDialog(frame, "Zaczyna "+(ewaluacja.getTurn()==Owner.PLAYER1 ? player1Name : player2Name));
+		
+		state = new State(9,9,ewaluacja.getBoard(), ewaluacja.getTurn());
+		State nextState = minmax.minMaxStep(state, 2);
+		nextState.showBoard();
+		if(ewaluacja.getSlider1Value()==nextState.slider1Value){
+			slider2.setValue(nextState.slider2Value);
+	//		ewaluacja.setSlider2Value(nextState.slider2Value);
+		}
+		else{
+			slider1.setValue(nextState.slider1Value);
+	//		ewaluacja.setSlider1Value(nextState.slider1Value);
+		}
 		
 	}
 }

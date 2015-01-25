@@ -84,6 +84,8 @@ public class State {
 		}
 		System.out.println(Ewaluacja.evaluate(plansza));
 		System.out.println("----------------------------");
+		System.out.println("Slider1 "+slider1Value);
+		System.out.println("Slider2 "+slider2Value);
 	}
 	
 	public ArrayList<State> generateChildStates()
