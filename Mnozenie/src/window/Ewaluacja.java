@@ -229,7 +229,6 @@ public class Ewaluacja {
 	}
 	
 	
-	
 	static int evaluateDown(Owner[][]board, Owner player)
 	{
 		int tripleLinesCounter = 0;
@@ -382,6 +381,7 @@ public class Ewaluacja {
 	return 1000*tripleLinesCounter+100*doubleLinesCounter+singleElementCounter;
 	
 	}
+
 	static int evaluateDiagonalUp(Owner[][]board, Owner player)
 	{
 		int tripleLinesCounter = 0;
@@ -646,11 +646,7 @@ public class Ewaluacja {
 	return 1000*tripleLinesCounter+100*doubleLinesCounter+singleElementCounter;
 	
 	}
-	/**
-	 * 
-	 * @return value of evaluated board
-	 */
-			
+
 
 	static int evaluate(Owner[][] board)
 	{

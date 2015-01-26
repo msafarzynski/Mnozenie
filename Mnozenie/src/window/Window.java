@@ -18,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import java.awt.Color;
@@ -54,6 +55,8 @@ public class Window {
 	boolean kom = true;
 	int mode;						//mode=0 tryb gracz vs bot, mode=1 tryb bot vs bot
 	private JTextArea textArea;
+	private JScrollPane scrollPane;
+	int depth = 3;
 	
 	class SliderListener implements ChangeListener{
 		int s1, s2;
@@ -63,8 +66,15 @@ public class Window {
 				s1 = slider1.getValue();
 				s2 = slider2.getValue();
 				a = s1*s2;
+				
 				if(kom){
-					if(plansza.isInUse(a)){							//jezeli kafelek juz jest przez kogos zajety to pojawia sie komunikat i 
+					if(plansza.isInUse(a)){						
+							if(mode==0 && ewaluacja.getTurn()==Owner.PLAYER1 || mode==1){
+								JOptionPane.showMessageDialog(frame,
+										"Remis!", "Remis",	
+										JOptionPane.PLAIN_MESSAGE);	
+								System.exit(0);
+							}
 							JOptionPane.showMessageDialog(frame,	//slidery wracaja do poprzedniego stanu
 									"Niepoprawny ruch", "Blad",		//tura nie jest zmieniana - ten sam gracz znow wybiera numer
 									JOptionPane.PLAIN_MESSAGE);
@@ -76,6 +86,8 @@ public class Window {
 						kom = true;
 						return;
 					}
+					if(depth % 6 ==0)
+						depth++;
 					ewaluacja.setSlider1Value(s1);
 					ewaluacja.setSlider2Value(s2);
 					if(firstMove){
@@ -87,11 +99,9 @@ public class Window {
 							nextState.showBoard();
 							if(s1!=nextState.slider1Value){
 								slider1.setValue(nextState.slider1Value);
-						//		ewaluacja.setSlider2Value(nextState.slider2Value);
 							}
 							if(s2!=nextState.slider2Value){
 								slider2.setValue(nextState.slider2Value);
-						//		ewaluacja.setSlider1Value(nextState.slider1Value);
 							}
 						}
 						return;
@@ -108,21 +118,20 @@ public class Window {
 							JOptionPane.showMessageDialog(frame,
 									"Wygrywa "+player2Name, "Wygrana",
 									JOptionPane.PLAIN_MESSAGE);
+						System.exit(0);
 					}
 					if(ewaluacja.getTurn()==Owner.PLAYER1)	ewaluacja.setTurn(Owner.PLAYER2);
 					else ewaluacja.setTurn(Owner.PLAYER1);
 					ewaluacja.showBoard();
 					if(mode==0 && ewaluacja.getTurn()==Owner.PLAYER1 || mode==1){			//jezeli teraz jest tura bota
 						state = new State(s1,s2,ewaluacja.getBoard(), ewaluacja.getTurn());
-						State nextState = minmax.minMaxStep(state, 3);
+						State nextState = minmax.minMaxStep(state, depth);
 						nextState.showBoard();
 						if(s1!=nextState.slider1Value){
 							slider1.setValue(nextState.slider1Value);
-					//		ewaluacja.setSlider2Value(nextState.slider2Value);
 						}
 						if(s2!=nextState.slider2Value){
 							slider2.setValue(nextState.slider2Value);
-					//		ewaluacja.setSlider1Value(nextState.slider1Value);
 						}
 					}
 					
@@ -142,7 +151,23 @@ public class Window {
 			public void run() {
 				try {
 					Window window = new Window();
-					window.frame.setVisible(true);
+					String[] options = {"Gracz vs bot", "Bot vs bot"};
+					window.mode = JOptionPane.showOptionDialog(window.frame, "Wybierz tryb gry", "Wybierz tryb", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options);
+				/*	if(window.mode==0)
+						window.player2Name = JOptionPane.showInputDialog(window.frame, "Wpisz nazwe gracza", "Gracz");
+					else window.player2Name = "Komputer2";
+				*/	
+					if(window.mode==0 && window.ewaluacja.getTurn()==Owner.PLAYER1 || window.mode==1){	
+						window.firstMove = false;
+						window.state = new State(9,9,window.ewaluacja.getBoard(), window.ewaluacja.getTurn());
+						State nextState = window.minmax.minMaxStep(window.state, window.depth);
+						nextState.showBoard();
+						window.slider1.setValue(nextState.slider1Value);
+						window.slider2.setValue(nextState.slider2Value);
+
+					}
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -158,6 +183,8 @@ public class Window {
 		initialize();
 		
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		
+		frame.setVisible(true);
 		
 		panel.add(plansza);	
 		
@@ -188,7 +215,23 @@ public class Window {
 		textArea.setLineWrap(true);
 		textArea.setBackground(Color.LIGHT_GRAY);
 		textArea.setBounds(569, 100, 175, 300);
-		panel.add(textArea);
+		scrollPane = new JScrollPane(textArea);
+		scrollPane.setBounds(569, 100, 175, 300);
+		panel.add(scrollPane);
+		
+		/*if(mode==0 && ewaluacja.getTurn()==Owner.PLAYER1 || mode==1){	
+			firstMove = false;
+			state = new State(9,9,ewaluacja.getBoard(), ewaluacja.getTurn());
+			State nextState = minmax.minMaxStep(state, 3);
+			nextState.showBoard();
+			if(9!=nextState.slider1Value){
+				slider1.setValue(nextState.slider1Value);
+			}
+			if(9!=nextState.slider2Value){
+				slider2.setValue(nextState.slider2Value);
+			}
+		}
+		*/
 	}
 
 	/**
@@ -200,6 +243,7 @@ public class Window {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 780, 579);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Gra w mnozenie");
 		
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -231,26 +275,10 @@ public class Window {
 		slider1.addChangeListener(new SliderListener());
 		slider2.addChangeListener(new SliderListener());
 		
-		String[] options = {"Gracz vs bot", "Bot vs bot"};
-		mode = JOptionPane.showOptionDialog(frame, "Wybierz tryb gry", "Wybierz tryb", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options);
-		if(mode==0)
-			player2Name = JOptionPane.showInputDialog(frame, "Wpisz nazwe gracza", "Gracz");
-		else player2Name = "Komputer2";
-		JOptionPane.showMessageDialog(frame, "Zaczyna "+(ewaluacja.getTurn()==Owner.PLAYER1 ? player1Name : player2Name));
 		
-		if(mode==0 && ewaluacja.getTurn()==Owner.PLAYER1 || mode==1){	
-			state = new State(9,9,ewaluacja.getBoard(), ewaluacja.getTurn());
-			State nextState = minmax.minMaxStep(state, 2);
-			nextState.showBoard();
-			if(9!=nextState.slider1Value){
-				slider1.setValue(nextState.slider1Value);
-		//		ewaluacja.setSlider2Value(nextState.slider2Value);
-			}
-			if(9!=nextState.slider2Value){
-				slider2.setValue(nextState.slider2Value);
-		//		ewaluacja.setSlider1Value(nextState.slider1Value);
-			}
-		}
+	//	JOptionPane.showMessageDialog(frame, "Zaczyna "+(ewaluacja.getTurn()==Owner.PLAYER1 ? player1Name : player2Name));
+		
+		
 	}
 }
 
