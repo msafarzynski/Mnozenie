@@ -114,7 +114,7 @@ public class Window {
 					ewaluacja.showBoard();
 					if(mode==0 && ewaluacja.getTurn()==Owner.PLAYER1 || mode==1){			//jezeli teraz jest tura bota
 						state = new State(s1,s2,ewaluacja.getBoard(), ewaluacja.getTurn());
-						State nextState = minmax.minMaxStep(state, 2);
+						State nextState = minmax.minMaxStep(state, 1);
 						nextState.showBoard();
 						if(s1!=nextState.slider1Value){
 							slider1.setValue(nextState.slider1Value);

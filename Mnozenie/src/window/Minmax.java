@@ -10,8 +10,9 @@ public class Minmax {
 		
 		int max = 0;
 		int result = 0;
+		State maxChild = state;
 		ArrayList<State> children = state.generateChildStates();
-		State maxChild =children.get(0);
+		if(children.size()!=0)maxChild =children.get(0);
 		
 		for(State s: children)
 		if( ( result= minMax(s, depth-1))>max)
@@ -28,7 +29,7 @@ public class Minmax {
 		int minmax = 0;
 		int result = 0;
 		
-		if((depth<=0)||(state.generateChildStates().size()==0)||Math.abs(Ewaluacja.evaluate(state.getBoard()))>100000)return Ewaluacja.evaluate(state.getBoard());
+		if((depth<=0)||(state.generateChildStates().size()==0)||Math.abs(Ewaluacja.evaluate(state.getBoard()))>90000)return Ewaluacja.evaluate(state.getBoard());
 		else
 			if (state.getTurn()==Owner.PLAYER1)//maksymalizuj¹cy
 			{

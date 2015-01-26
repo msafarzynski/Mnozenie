@@ -120,7 +120,7 @@ public class State {
 							if( i*slider2Value == Functions.numerKafla(rowId, columnId))
 								{
 									copy =new State(this);
-									copy.setSlider2Value(i);
+									copy.setSlider1Value(i);
 									copy.setBoardValue(rowId, columnId, this.getTurn());
 									if(copy.getTurn()==Owner.PLAYER1)	copy.setTurn(Owner.PLAYER2);
 									else copy.setTurn(Owner.PLAYER1);
