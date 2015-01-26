@@ -138,7 +138,7 @@ public class State {
 		}
 		
 		System.out.println("==============================================================================================================");
-		for(State s: childStates)s.showBoard();
+		//for(State s: childStates)s.showBoard();
 		return childStates;
 
 	}
